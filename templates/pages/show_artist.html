@@ -21,7 +21,7 @@
 			<i class="fas fa-phone-alt"></i> {% if artist.phone %}{{ artist.phone }}{% else %}No Phone{% endif %}
         </p>
         <p>
-			<i class="fas fa-link"></i> {% if artist.website %}<a href="{{ artist.website }}" target="_blank">{{ artist.website }}</a>{% else %}No Website{% endif %}
+			<i class="fas fa-link"></i> {% if artist.website_link %}<a href="{{ artist.website_link }}" target="_blank">{{ artist.website_link }}</a>{% else %}No Website{% endif %}
 		</p>
 		<p>
 			<i class="fab fa-facebook-f"></i> {% if artist.facebook_link %}<a href="{{ artist.facebook_link }}" target="_blank">{{ artist.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
@@ -38,23 +38,54 @@
 			<i class="fas fa-moon"></i> Not currently seeking performance venues
 		</p>
 		{% endif %}
+
+		
+		<div class="genres">
+			{% for genre in artist.genres %}
+			<span class="genre">{{ genre }}</span>
+			{% endfor %}
+		</div>
+
 	</div>
 	<div class="col-sm-6">
 		<img src="{{ artist.image_link }}" alt="Venue Image" />
 	</div>
 </div>
 <section>
-	<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
-		{%for show in artist.upcoming_shows %}
-		<div class="col-sm-4">
-			<div class="tile tile-show">
-				<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
-				<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
-				<h6>{{ show.start_time|datetime('full') }}</h6>
+		<div class="col-sm-6">
+			<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+			<div class="row">
+				{%for show in artist.upcoming_shows %}
+				<div class="col-sm-4">
+					<div class="tile tile-show">
+						<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
+						<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
+						<h6>{{ show.start_time|datetime('full') }}</h6>
+					</div>
+				</div>
+				{% endfor %}
 			</div>
 		</div>
-		{% endfor %}
+		<div class="col-sm-6">
+			<div class="form-wrapper">
+				<form class="form">
+					<h3 class="form-heading">Add Songs<em></em></h3>
+					<div class="form-group">
+						<label>Album</label>
+						<select class="form-control" id="album-select">
+							<option value="" disabled selected>Select the Album</option>
+							<option value="XY"></option>
+							<option value="XX"></option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="name">Songs</label>
+						<input class="form-control" type="text">
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 </section>
 <section>

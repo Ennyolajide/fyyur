@@ -100,6 +100,11 @@
         {% endif %}
       {% endwith %}
 
+      <div id="flash-alert" class="alert alert-block alert-info fade in hidden">
+        <a class="close" data-dismiss="alert">&times;</a>
+        <span> </span>
+      </div>
+
       {% block content %}{% endblock %}
       
     </main>

@@ -7,3 +7,21 @@
  * main.css.
  */
 
+ .hidden {
+     display: none;
+ }
+
+ .inline-flex {
+     display: inline-flex;
+ }
+
+ .delete-cross {
+     color: red;
+     outline: none;
+     border: none;
+     font-size: 18px;
+     display: inline;
+     cursor: pointer;
+
+ }
+
