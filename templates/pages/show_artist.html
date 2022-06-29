@@ -39,53 +39,43 @@
 		</p>
 		{% endif %}
 
-		
-		<div class="genres">
-			{% for genre in artist.genres %}
-			<span class="genre">{{ genre }}</span>
+		<br/>
+		<p class="album-header">
+			Albums & Songs
+		</p>
+		<ul class="albums">
+			{% for album in albums %}
+				<li class="albums-item"></li>
+					<i class="fa fa-folder-open"></i>
+					<span class="album-name">{{ album.name }}</span>
+					<ul class="songs">
+						{% for song in album.songs %}
+							<li class="songs-item">
+								<i class="fa fa-music"></i> 
+								<span class="song-name"><em>{{ song }}</em></span>
+							</li>
+						{% endfor %}
+					</ul>
+				</li>
 			{% endfor %}
-		</div>
-
+		</ul>
 	</div>
 	<div class="col-sm-6">
 		<img src="{{ artist.image_link }}" alt="Venue Image" />
 	</div>
 </div>
 <section>
+	<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
-		<div class="col-sm-6">
-			<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
-			<div class="row">
-				{%for show in artist.upcoming_shows %}
-				<div class="col-sm-4">
-					<div class="tile tile-show">
-						<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
-						<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
-						<h6>{{ show.start_time|datetime('full') }}</h6>
-					</div>
-				</div>
-				{% endfor %}
+		{%for show in artist.upcoming_shows %}
+		<div class="col-sm-4">
+			<div class="tile tile-show">
+				<img src="{{ show.venue_image_link }}" alt="Show Venue Image" />
+				<h5><a href="/venues/{{ show.venue_id }}">{{ show.venue_name }}</a></h5>
+				<h6>{{ show.start_time|datetime('full') }}</h6>
 			</div>
 		</div>
-		<div class="col-sm-6">
-			<div class="form-wrapper">
-				<form class="form">
-					<h3 class="form-heading">Add Songs<em></em></h3>
-					<div class="form-group">
-						<label>Album</label>
-						<select class="form-control" id="album-select">
-							<option value="" disabled selected>Select the Album</option>
-							<option value="XY"></option>
-							<option value="XX"></option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="name">Songs</label>
-						<input class="form-control" type="text">
-					</div>
-				</form>
-			</div>
-		</div>
+		{% endfor %}
 	</div>
 </section>
 <section>
@@ -104,6 +94,6 @@
 </section>
 
 <a href="/artists/{{ artist.id }}/edit"><button class="btn btn-primary btn-lg">Edit</button></a>
-
+<a href="/artists/{{ artist.id }}/ablum-song/create"><button class="btn btn-success btn-lg">Add Albums & Songs</button></a>
+<a href="/artists/{{ artist.id }}/availability/create"><button class="btn btn-success btn-lg">Update Availablity</button></a>
 {% endblock %}
-

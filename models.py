@@ -89,4 +89,13 @@ class Song(db.Model):
     
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
     
+class Availability(db.Model):
+    __tablename__ = 'availability'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    form_date = db.Column(db.DateTime, nullable=False)
+    to_date = db.Column(db.DateTime, nullable=False)
+    
+    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'))
+    
     

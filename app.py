@@ -319,7 +319,18 @@ def show_artist(artist_id):
   data['upcoming_shows'] = upcoming_shows_list
   data['upcoming_shows_count'] = len(upcoming_shows_list)
   
-  return render_template('pages/show_artist.html', artist=data)
+  #for Project standout only
+  albums = list()
+  for album in artist.albums:
+    songs = list()
+    for song in album.songs:
+      songs.append(song.name)
+    albums.append({
+      'name': album.name,
+      'songs': songs
+    })
+  
+  return render_template('pages/show_artist.html', artist=data, albums=albums)
 
 
 #  Update
@@ -383,7 +394,6 @@ def edit_venue_submission(venue_id):
   if form.validate_on_submit():
     try:
       form.populate_obj(venue)
-      pprint(venue.__dict__)
       db.session.add(venue)
       db.session.commit()
       flash('Venue updated successfully!')
@@ -469,7 +479,6 @@ def create_show_submission():
   # called to create new shows in the db, upon submitting new show listing form
   # TODO: insert form data as a new Show record in the db, instead
   form = ShowForm()
-  #pprint(form.venue_id.__dict__)
   if form.validate_on_submit():
     try:
       venue_id = form.venue_id.data
@@ -481,7 +490,6 @@ def create_show_submission():
       else:
         new_show = Show()
         form.populate_obj(new_show)
-        pprint(new_show)
         db.session.add(new_show)
         db.session.commit()
         flash('Show was successfully listed!')  
@@ -503,6 +511,84 @@ def not_found_error(error):
 @app.errorhandler(500)
 def server_error(error):
     return render_template('errors/500.html'), 500
+  
+@app.route('/artists/<int:artist_id>/availability/create', methods=['GET'])
+def create_artist_availability(artist_id):
+  
+  return render_template('forms/new_availability.html')
+
+@app.route('/artists/<int:artist_id>/availability/create', methods=['POST'])
+def submit_artist_availability(artist_id):
+  
+  return render_template('forms/new_availability.html')
+  
+
+@app.route('/artists/<int:artist_id>/ablum-song/create', methods=['GET'])
+def create_ablum(artist_id):
+  song_form = SongForm(artist_id=artist_id)
+  album_form = AlbumForm(artist_id=artist_id)
+  artist = Artist.query.get(artist_id)
+  song_form.album_id.choices = [(d.id, d.name) for d in artist.albums]
+  
+  return render_template('forms/new_album_song.html', song_form=song_form, album_form=album_form, artist=artist)
+  
+@app.route('/artists/<int:artist_id>/album/create', methods=['GET','POST'])
+def create_album_submission(artist_id):
+  if request.method == 'GET':
+    return redirect(url_for('create_ablum', artist_id=artist_id))
+  else:  
+    album_form = AlbumForm(artist_id=artist_id)
+    if album_form.validate_on_submit():
+      try:
+        new_album = Album()
+        album_form.populate_obj(new_album)
+        db.session.add(new_album)
+        db.session.commit()
+        flash('album ' + album_form.name.data + ' was added successfully!')
+      except:
+        db.session.rollback()
+        flash('An error occurred. Album ' + album_form.name.data + ' could not be added.')
+      finally:
+        db.session.close() 
+    else:
+      format_errors(album_form) 
+      artist = Artist.query.get(artist_id)
+      song_form = SongForm(artist_id=artist_id)
+      song_form.album_id.choices = [(d.id, d.name) for d in artist.albums]
+      
+      return render_template('forms/new_album_song.html', song_form=song_form, album_form=album_form, artist=artist)
+      
+    return redirect(url_for('show_artist', artist_id=artist_id))
+
+
+@app.route('/artists/<int:artist_id>/song/create', methods=['GET','POST'])
+def create_song_submission(artist_id):
+  if request.method == 'GET':
+    return redirect(url_for('create_ablum', artist_id=artist_id))
+  else:  
+    artist = Artist.query.get(artist_id)
+    song_form = SongForm(artist_id=artist_id)
+    song_form.album_id.choices = [(d.id, d.name) for d in artist.albums]
+    
+    if song_form.validate_on_submit():
+      try:
+        new_song = Song()
+        song_form.populate_obj(new_song)
+        db.session.add(new_song)
+        db.session.commit()
+        flash('song ' + song_form.name.data + ' was added successfully!')
+      except:
+        db.session.rollback()
+        flash('An error occurred. Album ' + song_form.name + ' could not be added.')
+      finally:
+        db.session.close() 
+    else:
+      format_errors(song_form) 
+      album_form = AlbumForm(artist_id=artist_id)
+
+      return render_template('forms/new_album_song.html', song_form=song_form, album_form=album_form, artist=artist)
+
+    return redirect(url_for('show_artist', artist_id=artist_id))
 
 
 if not app.debug:

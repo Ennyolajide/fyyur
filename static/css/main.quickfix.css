@@ -25,3 +25,38 @@
 
  }
 
+ .album-header {
+     font-size: 16px;
+ }
+
+ .albums {
+     padding-left: 0px;
+ }
+
+ .albums, .songs {
+    list-style-type: none;
+ }
+
+ .albums-item {
+    padding: 8px;
+ }
+
+ .songs-item {
+    padding: 5px;
+ }
+
+ .album-name {
+     padding-left: 15px;
+     font-size: 16px;
+     color: black;
+ }
+
+ .song-name {
+    padding-left: 15px;
+    font-size: 14px;
+    color: rgb(255, 170, 0);
+ }
+
+
+song-items
+song-items  
